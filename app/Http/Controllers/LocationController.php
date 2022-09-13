@@ -24,5 +24,15 @@ class LocationController extends Controller
         $lat = $request->latitude;
         $lng = $request->longitude;
         $radius = $request->radius;
+
+        //Return all locations within given radius (KM) - change 6371 to 3956 for miles
+        return Location::select()->addSelect(['distance' => DB::raw(sprintf('(6371 * acos(cos(radians(%1$.7f)) * cos(radians(`lat`)) * cos(radians(`lng`) - radians(%2$.7f)) + sin(radians(%1$.7f)) * sin(radians(`lat`)))) AS `distance`',
+            $lat,
+            $lng))
+        ])
+            ->groupBy('name')
+            ->havingRaw('distance <' . $radius)
+            ->orderBy('distance', 'asc')
+            ->get();
     }
 }
