@@ -15,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/search', [LocationController::class, 'index']);
-
 Route::get('/search', [LocationController::class, 'index']);
+//Route::get('/search', [LocationController::class, 'index'])->middleware(['apiKey']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
